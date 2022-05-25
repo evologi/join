@@ -1,0 +1,8 @@
+.*
+!.github
+!.gitignore
+!.nycrc.json
+coverage
+join.cjs
+node_modules
+package-lock.json
