@@ -1,6 +1,6 @@
 {
   "name": "@evologi/join",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Join strategies for Iterables, Maps, and Arrays.",
   "type": "module",
   "main": "join.cjs",
