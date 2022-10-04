@@ -1,6 +1,7 @@
 # @evologi/join
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@evologi/join)
 
 Join strategies for Iterables, Maps, and Arrays.
 
@@ -13,7 +14,11 @@ Join strategies for Iterables, Maps, and Arrays.
 ## Example
 
 ```javascript
-import { fromIterable, innerJoin } from '@evologi/join'
+import {
+  fromIterable,
+  getDiscardedValues,
+  innerJoin
+} from '@evologi/join'
 
 const left = fromIterable(
   [
@@ -37,11 +42,14 @@ function resolve (leftItem, rightItem, key) {
   return { _id: key, value: leftItem.value + rightItem.value }
 }
 
-const results = Array.from(
-  innerJoin(left, right, resolve)
-)
+const joined = innerJoin(left, right, resolve)
+const discarded = getDiscardedValues(joined)
 
-// results === [{ _id: 'a', value: 18 }, { _id: 'c', value: 12 }]
+// [ { _id: 'a', value: 18 }, { _id: 'c', value: 12 } ]
+console.log(Array.from(joined))
+
+// [ { id: 'b', value: 2 }, { key: 'd', value: 42 } ]
+console.log(Array.from(discarded))
 ```
 
 ## API
@@ -112,7 +120,8 @@ const iterable = join(
   })
 )
 
-const array = Array.from(iterable) // [{ id: 42, message: 'hello world' }]
+// [ { id: 42, message: 'hello world' } ]
+console.log(Array.from(iterable))
 ```
 
 ### `innerJoin(leftMap, rightMap, resolve)`
@@ -184,3 +193,10 @@ Returns the opposite join type string or a negated select function.
 
 - `selectOrType` `<String> | <Function>`
 - Returns: `<String> | <Function>`
+
+### `getDiscardedValues(iterable)`
+
+Returns an iterable that yields all discarded values from the passed joined iterable.
+
+- `iterable` `<Iterable>`
+- Returns: `<Iterable>`

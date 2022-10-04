@@ -3,6 +3,7 @@ import test from 'ava'
 import {
   fromIterable,
   fullJoin,
+  getDiscardedValues,
   innerJoin,
   join,
   leftJoin,
@@ -363,4 +364,43 @@ test('validation', t => {
   t.throws(() => join({}, new Map(), () => true, () => {}))
   t.throws(() => join(new Map(), new Map(), 'nope', () => {}))
   t.throws(() => join(new Map(), new Map(), 'inner', {}))
+})
+
+test('getDiscardedValues', t => {
+  t.plan(3)
+
+  const left = declare([
+    { id: 'a', value: 1 },
+    { id: 'b', value: 2 }
+  ])
+
+  const right = declare([
+    { id: 'a', value: 5 },
+    { id: 'c', value: 9 }
+  ])
+
+  const joined = innerJoin(
+    left,
+    right,
+    (l, r) => ({
+      ...l,
+      ...r,
+      value: l.value + r.value
+    })
+  )
+
+  t.deepEqual(
+    Array.from(joined),
+    [{ id: 'a', value: 6 }]
+  )
+
+  t.deepEqual(
+    Array.from(getDiscardedValues(joined)),
+    [
+      { id: 'b', value: 2 },
+      { id: 'c', value: 9 }
+    ]
+  )
+
+  t.throws(() => getDiscardedValues([]))
 })

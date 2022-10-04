@@ -1,3 +1,5 @@
+const sym = Symbol('discarded-values')
+
 /**
  * Join two `Map` objects.
  */
@@ -14,7 +16,26 @@ export function join (left, right, selectOrType, resolve) {
     throw new TypeError('A resolve function is required')
   }
 
-  return iterate(left, right, select, resolve)
+  const result = iterate(left, right, select, resolve)
+
+  Object.defineProperty(result, sym, {
+    get () {
+      return iterate(left, right, not(select), pickOne)
+    }
+  })
+
+  return result
+}
+
+function pickOne (leftValue, rightValue) {
+  return leftValue === undefined ? rightValue : leftValue
+}
+
+export function getDiscardedValues (data) {
+  if (!(sym in Object(data))) {
+    throw new Error('Expected joined iterable')
+  }
+  return data[sym]
 }
 
 function * iterate (left, right, select, resolve) {

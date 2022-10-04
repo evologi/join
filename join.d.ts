@@ -36,7 +36,7 @@ export declare type SelectOrType<K, L, R> = Select<K, L, R> | Type;
 /**
  * Join two `Map` objects.
  */
- export declare function join<K, L, R, U>(
+export declare function join<K, L, R, U>(
   left: Map<K, L>,
   right: Map<K, R>,
   selectOrType: SelectOrType<K, L, R>,
@@ -104,3 +104,10 @@ export declare function rightOuterJoin<K, R, U>(
   right: Map<K, R>,
   resolve: (leftValue: undefined, rightValue: R, key: K) => U
 ): Generator<U, void, unknown>;
+
+/**
+ * Retrieves the discarded values from a join result.
+ */
+export declare function getDiscardedValues<T = any>(
+  joined: Iterable<any>
+): Generator<T, void, unknown>;
